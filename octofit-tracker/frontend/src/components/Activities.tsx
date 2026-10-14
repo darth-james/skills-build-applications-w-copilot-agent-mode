@@ -1,10 +1,11 @@
+import { getJson } from '../api/client.js';
 import { useApiData } from './useApiData.js';
 
 type Activity = { type: string; minutes: number; points: number; occurredAt?: string };
 type ActivityResponse = { activities: Activity[] };
 
 export default function Activities() {
-  const result = useApiData<ActivityResponse>('/api/activities');
+  const result = useApiData<ActivityResponse>('/api/activities', getJson<ActivityResponse>);
 
   return (
     <section className="card h-100">

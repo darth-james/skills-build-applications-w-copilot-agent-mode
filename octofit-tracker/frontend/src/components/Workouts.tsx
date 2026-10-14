@@ -1,3 +1,4 @@
+import { getJson } from '../api/client.js';
 import { useApiData } from './useApiData.js';
 
 type Workout = { title: string; focus?: string; minutes?: number; difficulty?: string; reason?: string };
@@ -5,7 +6,7 @@ type WorkoutResponse = { suggestions: Workout[] };
 
 export default function Workouts() {
   const userEmail = 'mona@example.com';
-  const result = useApiData<WorkoutResponse>(`/api/workouts/suggestions/${encodeURIComponent(userEmail)}`);
+  const result = useApiData<WorkoutResponse>(`/api/workouts/suggestions/${encodeURIComponent(userEmail)}`, getJson<WorkoutResponse>);
   return (
     <section className="card h-100">
       <div className="card-body">

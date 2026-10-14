@@ -1,10 +1,11 @@
+import { getJson } from '../api/client.js';
 import { useApiData } from './useApiData.js';
 
 type Team = { name: string; mascot?: string; members?: unknown[] };
 type TeamResponse = { teams: Team[] };
 
 export default function Teams() {
-  const result = useApiData<TeamResponse>('/api/teams');
+  const result = useApiData<TeamResponse>('/api/teams', getJson<TeamResponse>);
   return (
     <section className="card h-100">
       <div className="card-body">

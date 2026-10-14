@@ -48,7 +48,15 @@ export async function createTeam(input: unknown) {
   if (members !== undefined && !Array.isArray(members)) {
     throw Object.assign(new Error('Team members must be an array'), { status: 400 });
   }
-  return Team.create({ name, mascot, members: members ?? [] });
+  const memberIds = (members ?? []) as unknown[];
+  if (memberIds.some((memberId) => typeof memberId !== 'string' || !Types.ObjectId.isValid(memberId))) {
+    throw Object.assign(new Error('Team members must be valid user IDs'), { status: 400 });
+  }
+  const uniqueMemberIds = [...new Set((memberIds as string[]).map((memberId) => memberId.toLowerCase()))];
+  if (await User.countDocuments({ _id: { $in: uniqueMemberIds } }) !== uniqueMemberIds.length) {
+    throw Object.assign(new Error('Team members must reference existing users'), { status: 400 });
+  }
+  return Team.create({ name, mascot, members: memberIds });
 }
 
 export async function getLeaderboard() {
